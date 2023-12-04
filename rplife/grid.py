@@ -28,7 +28,7 @@ class LifeGrid:
         ## Loop over the currently alive cells stored in the .pattern object.
             for drow, dcol in neighbors:
             ## Loop over the neighbor deltas, count how many neighbors a cell has
-                num_neighbors[[row+drow, col+dcol]] += 1
+                num_neighbors[(row+drow, col+dcol)] += 1
 
         ## Build a set containing the cells that will stay alive. 
         ## To do this, first create a set of neighbors that have two or three 
@@ -46,13 +46,23 @@ class LifeGrid:
             cell for cell, num in num_neighbors.items() if num == 3
         } - self.pattern.alive_cells
 
-        ## Updates .alive_cells with the set that results as the union of the cells
-        #   that stay alive and those that come alive
+        ## Updates .alive_cells with the set that results as the union of the 
+        #   cells that stay alive and those that come alive
         self.pattern.alive_cells = stay_alive | come_alive
-
     
     def as_string(self, bbox):
         pass
 
+
+    ## The .__str__() special method provides a way to represent the 
+    #    containing object in a user-friendly manner. 
+    ## With this method in place, when you use the built-in print() function 
+    #    to print an instance of LifeGrid, you get:
+    #           - the name of the current pattern 
+    #           - and the set of alive cells in the next line. 
+    ## This information gives you an idea of the current state of the life grid.
     def __str__(self):
-        pass
+        return (
+            f"{self.pattern.name}:\n"
+            f"Alive Cells --> {sorted(self.pattern.alive_cells)}"
+        )
