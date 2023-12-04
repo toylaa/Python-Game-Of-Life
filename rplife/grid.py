@@ -1,9 +1,15 @@
 import collections
 
+ALIVE = "♥"
+DEAD = "‧"
+
 class LifeGrid:
+
     def __init__(self, pattern):
         self.pattern = pattern
 
+    ##----------------------------------------------------------------------------##
+    
     def evolve(self):
         #define the delta coordinates for the neighbors of the target cell.
         neighbors = (
@@ -49,10 +55,34 @@ class LifeGrid:
         ## Updates .alive_cells with the set that results as the union of the 
         #   cells that stay alive and those that come alive
         self.pattern.alive_cells = stay_alive | come_alive
-    
-    def as_string(self, bbox):
-        pass
 
+    ##----------------------------------------------------------------------------##
+
+    def as_string(self, bbox):
+        ## Unpack the bounding box coordinates into four variables. 
+        ## These variables define which part of the infinite grid 
+        #    to display on the screen.
+        start_col, start_row, end_col, end_row = bbox
+        
+        ##Then, you create the display variable as a list containing the pattern’s name. 
+        ## .center() is used here to center the name over the grid’s width.
+        display = [self.pattern.name.center(2 * (end_col - start_col))]
+        
+        ## Iterate over the range of rows inside the view
+        for row in range(start_row, end_row):
+            ## Create a new list containing the alive and dead cells in the current row.
+            display_row = [
+                ## Check if its coordinates are in the set of alive cells
+                ALIVE if (row, col) in self.pattern.alive_cells else DEAD
+                for col in range(start_col, end_col)
+            ]
+            ## Append the row as a string to the display list
+            display.append(" ".join(display_row))
+
+        ##  After loop, join together every string using a newline character
+        return "\n".join(display)
+
+    ##----------------------------------------------------------------------------##
 
     ## The .__str__() special method provides a way to represent the 
     #    containing object in a user-friendly manner. 
